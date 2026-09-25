@@ -3,563 +3,430 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ôn Thi Thần Tốc: Lịch Sử & Địa Lý</title>
-    <!-- Tailwind CSS -->
+    <title>LỊCH SỬ ĐỊA LÝ NỘI DUNG SỐ</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Alpine.js for interactive state -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <!-- FontAwesome icons -->
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    colors: {
-                        darkBg: '#090d16',
-                        darkCard: '#111827',
-                        darkBorder: '#1f293d',
-                        neonRed: '#ff3366',
-                        neonYellow: '#ffbe0b',
-                        neonBlue: '#00f5d4',
-                        neonPurple: '#8338ec',
-                        neonGreen: '#06d6a0',
-                    },
                     fontFamily: {
-                        heading: ['Montserrat', 'sans-serif'],
-                        body: ['Plus Jakarta Sans', 'sans-serif']
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        neon: {
+                            blue: '#00f0ff',
+                            purple: '#7000ff',
+                            pink: '#ff007f',
+                            green: '#00ff66',
+                            yellow: '#ffe600'
+                        }
                     }
                 }
             }
         }
     </script>
-    
     <style>
         body {
+            background-color: #0b0f19;
+            color: #e2e8f0;
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #090d16;
-            color: #f3f4f6;
-            overflow-x: hidden;
-            -webkit-tap-highlight-color: transparent;
         }
-        
-        ::-webkit-scrollbar {
-            width: 6px;
+        .glow-box-blue {
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.15);
+            border: 1px solid rgba(0, 240, 255, 0.3);
         }
-        ::-webkit-scrollbar-track {
-            background: #090d16;
+        .glow-box-purple {
+            box-shadow: 0 0 20px rgba(112, 0, 255, 0.15);
+            border: 1px solid rgba(112, 0, 255, 0.3);
         }
-        ::-webkit-scrollbar-thumb {
-            background: #1f293d;
-            border-radius: 3px;
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #00f5d4;
-        }
-
-        .glass-card {
-            background: rgba(17, 24, 39, 0.75);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .glass-nav {
-            background: rgba(9, 13, 22, 0.85);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-        }
-
-        .glow-red { box-shadow: 0 0 20px -5px rgba(255, 51, 102, 0.35); }
-        .glow-yellow { box-shadow: 0 0 20px -5px rgba(255, 190, 11, 0.35); }
-        .glow-blue { box-shadow: 0 0 20px -5px rgba(0, 245, 212, 0.35); }
-        .glow-green { box-shadow: 0 0 20px -5px rgba(6, 214, 160, 0.35); }
-
-        .toast-enter {
-            animation: slideUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-        }
-        @keyframes slideUp {
-            from { transform: translateY(100%) scale(0.9); opacity: 0; }
-            to { transform: translateY(0) scale(1); opacity: 1; }
+        .card-hover:hover {
+            transform: translateY(-4px);
         }
     </style>
 </head>
-<body x-data="appData()" class="min-h-screen flex flex-col justify-between pb-20 md:pb-6 selection:bg-neonBlue selection:text-darkBg">
+<body x-data="{ activeTab: 'history' }">
 
-    <header class="sticky top-0 z-40 glass-nav border-b border-gray-800/80 transition-all duration-300">
-        <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
-            <a href="#" class="flex items-center gap-2.5">
-                <span class="text-2xl animate-bounce">⚡</span>
-                <div>
-                    <span class="font-heading font-black text-lg sm:text-xl tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-neonRed via-neonYellow to-neonBlue">
-                        E-LEARNING LỊCH SỬ VÀ ĐỊA LÝ
-                    </span>
-                    <p class="text-[10px] text-gray-400 font-mono hidden sm:block">Trang điện tử</p>
-                </div>
-            </a>
-
-            <!-- Subject Switcher Tabs -->
-            <div class="flex items-center bg-gray-900/90 p-1 rounded-2xl border border-gray-800">
-                <button @click="currentSubject = 'history'" 
-                        :class="currentSubject === 'history' ? 'bg-neonRed text-white font-bold shadow-lg shadow-neonRed/30' : 'text-gray-400 hover:text-white'"
-                        class="px-3 sm:px-4 py-1.5 rounded-xl text-xs sm:text-sm transition-all duration-200 flex items-center gap-1.5">
-                    <i class="fa-solid fa-bomb"></i>
-                    <span>Lịch Sử</span>
-                </button>
-                <button @click="currentSubject = 'geography'" 
-                        :class="currentSubject === 'geography' ? 'bg-neonGreen text-darkBg font-bold shadow-lg shadow-neonGreen/30' : 'text-gray-400 hover:text-white'"
-                        class="px-3 sm:px-4 py-1.5 rounded-xl text-xs sm:text-sm transition-all duration-200 flex items-center gap-1.5">
-                    <i class="fa-solid fa-earth-asia"></i>
-                    <span>Địa Lý</span>
-                </button>
+<!-- Sticky Header Navigation -->
+<header class="sticky top-0 z-50 backdrop-blur-md bg-slate-950/80 border-b border-slate-800">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center text-white font-black text-xl shadow-lg shadow-cyan-500/30">
+                ⚡
             </div>
-
-            <!-- Header Action Buttons -->
-            <div class="hidden sm:flex items-center gap-2">
-                <button @click="openQuiz()" 
-                        class="px-3 py-1.5 rounded-xl bg-gradient-to-r from-neonPurple to-neonBlue text-white text-xs font-bold hover:opacity-90 transition-all duration-200 flex items-center gap-1.5 shadow-md">
-                    <i class="fa-solid fa-gamepad"></i>
-                    <span>Quick Quiz</span>
-                </button>
-                <button @click="copyActiveContent()" 
-                        title="Copy nội dung"
-                        class="p-2 rounded-xl bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white border border-gray-700 transition-all duration-200 active:scale-95">
-                    <i class="fa-regular fa-copy text-sm"></i>
-                </button>
-            </div>
-        </div>
-    </header>
-
-    <main class="max-w-5xl mx-auto px-4 py-6 sm:py-8 space-y-8 flex-grow w-full">
-
-        <!-- ================= SUBJECT 1: HISTORY ================= -->
-        <div x-show="currentSubject === 'history'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" class="space-y-8">
-            
-            <!-- Hero History Banner -->
-            <section class="relative rounded-3xl p-6 sm:p-8 overflow-hidden border border-neonRed/30 glass-card bg-gradient-to-br from-darkCard via-gray-900 to-darkBg">
-                <div class="absolute -top-20 -right-20 w-64 h-64 bg-neonRed/20 rounded-full blur-3xl pointer-events-none"></div>
-                <div class="relative z-10 space-y-3">
-                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neonRed/10 border border-neonRed/30 text-neonRed text-xs font-semibold">
-                        <i class="fa-solid fa-fire"></i> Lịch Sử Bài 4
-                    </div>
-                    <h1 class="text-2xl sm:text-4xl font-extrabold font-heading text-white">
-                        WORLD WAR II <span class="text-transparent bg-clip-text bg-gradient-to-r from-neonRed via-neonYellow to-neonPurple">(SIÊU NGẮN GỌN)</span> 💣
-                    </h1>
-                    <p class="text-gray-400 text-xs sm:text-sm">Tóm tắt các mốc sự kiện quan trọng nhất của Thế chiến II chỉ trong 3 phút học.</p>
-                </div>
-            </section>
-
-            <!-- 1. Nguyên Nhân -->
-            <section class="glass-card rounded-2xl p-5 border border-neonRed/30 glow-red">
-                <div class="flex items-center justify-between mb-4 border-b border-gray-800 pb-3">
-                    <h2 class="text-lg sm:text-xl font-bold font-heading text-white flex items-center gap-2.5">
-                        <span class="w-8 h-8 rounded-xl bg-neonRed/20 border border-neonRed/40 text-neonRed flex items-center justify-center font-bold text-sm">1</span>
-                        <span>Nguyên Nhân Bùng Nổ</span>
-                    </h2>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="p-4 rounded-xl bg-gray-900/80 border border-gray-800 space-y-1">
-                        <span class="text-xs px-2 py-0.5 rounded bg-neonYellow/20 text-neonYellow font-bold">Sâu xa</span>
-                        <p class="text-xs sm:text-sm text-gray-300 leading-relaxed pt-1">
-                            Mâu thuẫn giữa các nước đế quốc về thị trường, thuộc địa. <strong class="text-neonRed">Khối Trục (Germany, Italy, Japan)</strong> muốn chia lại thế giới.
-                        </p>
-                    </div>
-                    <div class="p-4 rounded-xl bg-gray-900/80 border border-gray-800 space-y-1">
-                        <span class="text-xs px-2 py-0.5 rounded bg-neonRed/20 text-neonRed font-bold">Trực tiếp</span>
-                        <p class="text-xs sm:text-sm text-gray-300 leading-relaxed pt-1">
-                            <strong class="text-neonRed">1/9/1939:</strong> <strong class="text-white">Germany</strong> xâm lược <strong class="text-white">Poland</strong> ➔ Chiến tranh chính thức bùng nổ.
-                        </p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 2. Diễn Biến -->
-            <section class="glass-card rounded-2xl p-5 border border-neonYellow/30 glow-yellow">
-                <h2 class="text-lg sm:text-xl font-bold font-heading text-white flex items-center gap-2.5 mb-4 border-b border-gray-800 pb-3">
-                    <span class="w-8 h-8 rounded-xl bg-neonYellow/20 border border-neonYellow/40 text-neonYellow flex items-center justify-center font-bold text-sm">2</span>
-                    <span>Diễn Biến Chính</span>
-                </h2>
-                <div class="relative border-l-2 border-gray-800 ml-3 pl-4 space-y-5">
-                    <div class="relative">
-                        <div class="absolute -left-[23px] top-1 w-3.5 h-3.5 rounded-full bg-darkBg border-2 border-neonYellow"></div>
-                        <div class="bg-gray-900/80 p-3.5 rounded-xl border border-gray-800">
-                            <span class="text-xs font-bold text-neonYellow">1939 – 1941</span>
-                            <p class="text-xs sm:text-sm text-gray-300 mt-1"><strong class="text-white">Germany</strong> chiếm hầu hết <strong class="text-white">Europe</strong>; <strong class="text-white">Japan</strong> tấn công <strong class="text-neonRed">Pearl Harbor</strong> ➔ <strong class="text-neonBlue">US</strong> chính thức tham chiến.</p>
-                        </div>
-                    </div>
-                    <div class="relative">
-                        <div class="absolute -left-[23px] top-1 w-3.5 h-3.5 rounded-full bg-darkBg border-2 border-neonBlue"></div>
-                        <div class="bg-gray-900/80 p-3.5 rounded-xl border border-gray-800">
-                            <span class="text-xs font-bold text-neonBlue">1942 – 1943 (Bước Ngoặt)</span>
-                            <p class="text-xs sm:text-sm text-gray-300 mt-1"><strong class="text-neonRed">Soviet Union</strong> thắng trận <strong class="text-white">Stalingrad</strong> ➔ Bước ngoặt xoay chuyển cục diện, phe <strong class="text-white">Allies</strong> phản công.</p>
-                        </div>
-                    </div>
-                    <div class="relative">
-                        <div class="absolute -left-[23px] top-1 w-3.5 h-3.5 rounded-full bg-darkBg border-2 border-neonRed"></div>
-                        <div class="bg-gray-900/80 p-3.5 rounded-xl border border-gray-800 space-y-1.5">
-                            <span class="text-xs font-bold text-neonRed">1945 (Kết Thúc)</span>
-                            <p class="text-xs sm:text-sm text-gray-300"><strong>Tháng 5:</strong> <strong class="text-neonRed">Soviet Union</strong> chiếm <strong class="text-white">Berlin</strong> ➔ <strong class="text-white">Germany</strong> đầu hàng.</p>
-                            <p class="text-xs sm:text-sm text-gray-300"><strong>Tháng 8:</strong> <strong class="text-neonBlue">US</strong> thả 2 quả bom nguyên tử xuống <strong class="text-white">Japan</strong> ➔ <strong class="text-white">Japan</strong> đầu hàng, chiến tranh kết thúc.</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 3. Hậu Quả & 4. Ý Nghĩa -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Hậu quả -->
-                <section class="glass-card rounded-2xl p-5 border border-neonPurple/30">
-                    <h2 class="text-lg font-bold font-heading text-white flex items-center gap-2.5 mb-3 border-b border-gray-800 pb-2">
-                        <span class="w-8 h-8 rounded-xl bg-neonPurple/20 border border-neonPurple/40 text-neonPurple flex items-center justify-center font-bold text-sm">3</span>
-                        <span>Hậu Quả</span>
-                    </h2>
-                    <ul class="space-y-2 text-xs sm:text-sm text-gray-300">
-                        <li class="flex items-start gap-2">
-                            <i class="fa-solid fa-skull text-neonRed mt-0.5"></i>
-                            <span>Thảm họa lớn nhất lịch sử: <strong class="text-neonRed">~60 triệu người chết</strong>, <strong class="text-neonYellow">90 triệu người bị thương</strong>.</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <i class="fa-solid fa-house-crack text-amber-400 mt-0.5"></i>
-                            <span>Kinh tế <strong class="text-white">Europe</strong>, <strong class="text-white">Asia</strong> bị tàn phá nặng nề.</span>
-                        </li>
-                    </ul>
-                </section>
-
-                <!-- Ý nghĩa -->
-                <section class="glass-card rounded-2xl p-5 border border-neonBlue/30">
-                    <h2 class="text-lg font-bold font-heading text-white flex items-center gap-2.5 mb-3 border-b border-gray-800 pb-2">
-                        <span class="w-8 h-8 rounded-xl bg-neonBlue/20 border border-neonBlue/40 text-neonBlue flex items-center justify-center font-bold text-sm">4</span>
-                        <span>Ý Nghĩa & Vai Trò</span>
-                    </h2>
-                    <div class="space-y-2 text-xs sm:text-sm text-gray-300">
-                        <p><strong class="text-neonBlue">Ý nghĩa:</strong> Cứu nhân loại khỏi chủ nghĩa phát xít; tạo điều kiện cho phong trào giải phóng dân tộc phát triển mạnh mẽ.</p>
-                        <p><strong class="text-neonRed">Soviet Union:</strong> Lực lượng đi đầu, gánh team chính tiêu diệt phát xít Đức ở Europe và đánh tan quân Japan ở Asia.</p>
-                        <p><strong class="text-neonBlue">Allies (US, UK):</strong> Phối hợp chiến trường, cung cấp vũ khí/hậu cần và mở mặt trận thứ hai ép phát xít sụp đổ.</p>
-                    </div>
-                </section>
+            <div>
+                <h1 class="font-extrabold text-base md:text-xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-indigo-300 to-pink-500 uppercase">
+                    LỊCH SỬ ĐỊA LÝ NỘI DUNG SỐ
+                </h1>
+                <p class="text-xs text-slate-400">Tài liệu ôn tập tổng hợp</p>
             </div>
         </div>
 
-        <!-- ================= SUBJECT 2: GEOGRAPHY ================= -->
-        <div x-show="currentSubject === 'geography'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" class="space-y-8" style="display: none;">
-            
-            <!-- Hero Geography Banner -->
-            <section class="relative rounded-3xl p-6 sm:p-8 overflow-hidden border border-neonGreen/30 glass-card bg-gradient-to-br from-darkCard via-gray-900 to-darkBg">
-                <div class="absolute -top-20 -right-20 w-64 h-64 bg-neonGreen/20 rounded-full blur-3xl pointer-events-none"></div>
-                <div class="relative z-10 space-y-3">
-                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neonGreen/10 border border-neonGreen/30 text-neonGreen text-xs font-semibold">
-                        <i class="fa-solid fa-users"></i> Địa Lý Chuyên Đề
-                    </div>
-                    <h1 class="text-2xl sm:text-4xl font-extrabold font-heading text-white">
-                        NGUỒN LAO ĐỘNG & SỬ DỤNG LAO ĐỘNG <span class="text-transparent bg-clip-text bg-gradient-to-r from-neonGreen via-neonBlue to-neonYellow">(DỄ HIỂU)</span> 🌏
-                    </h1>
-                    <p class="text-gray-400 text-xs sm:text-sm">Trực quan hóa dữ liệu tỷ lệ, cơ cấu ngành và giải pháp nguồn lao động.</p>
-                </div>
-            </section>
-
-            <!-- 1. Nguồn lao động -->
-            <section class="glass-card rounded-2xl p-5 border border-neonGreen/30 glow-green">
-                <h2 class="text-lg sm:text-xl font-bold font-heading text-white flex items-center gap-2.5 mb-4 border-b border-gray-800 pb-3">
-                    <span class="w-8 h-8 rounded-xl bg-neonGreen/20 border border-neonGreen/40 text-neonGreen flex items-center justify-center font-bold text-sm">1</span>
-                    <span>Đặc Điểm Nguồn Lao Động</span>
-                </h2>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    <div class="p-4 rounded-xl bg-gray-900/80 border border-gray-800 text-center space-y-1">
-                        <span class="text-2xl font-black text-neonGreen">52,2%</span>
-                        <p class="text-xs font-semibold text-gray-300">Dân số dồi dào</p>
-                    </div>
-                    <div class="p-4 rounded-xl bg-gray-900/80 border border-gray-800 text-center space-y-1">
-                        <span class="text-2xl font-black text-neonBlue">28,4%</span>
-                        <p class="text-xs font-semibold text-gray-300">Đã qua đào tạo</p>
-                    </div>
-                    <div class="p-4 rounded-xl bg-gray-900/80 border border-gray-800 text-center space-y-1">
-                        <span class="text-lg font-bold text-neonYellow flex items-center justify-center h-8">Thiếu kỹ năng</span>
-                        <p class="text-xs font-semibold text-gray-400">Hạn chế về kỹ năng sâu</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 2. Sử dụng lao động -->
-            <section class="glass-card rounded-2xl p-5 border border-neonBlue/30 glow-blue">
-                <h2 class="text-lg sm:text-xl font-bold font-heading text-white flex items-center gap-2.5 mb-4 border-b border-gray-800 pb-3">
-                    <span class="w-8 h-8 rounded-xl bg-neonBlue/20 border border-neonBlue/40 text-neonBlue flex items-center justify-center font-bold text-sm">2</span>
-                    <span>Cơ Cấu Sử Dụng Lao Động</span>
-                </h2>
-                
-                <div class="space-y-5">
-                    <!-- Theo ngành -->
-                    <div>
-                        <h3 class="text-xs font-bold uppercase tracking-wider text-neonBlue mb-2.5">Theo Ngành Kinh Tế:</h3>
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-                            <div class="p-3 bg-gray-900/90 rounded-xl border border-gray-800 flex justify-between items-center">
-                                <span><i class="fa-solid fa-wheat-awn text-amber-400 mr-1.5"></i> Nông nghiệp:</span>
-                                <span class="font-bold text-neonRed">Giảm (26,4%)</span>
-                            </div>
-                            <div class="p-3 bg-gray-900/90 rounded-xl border border-gray-800 flex justify-between items-center">
-                                <span><i class="fa-solid fa-industry text-neonBlue mr-1.5"></i> Công nghiệp:</span>
-                                <span class="font-bold text-neonGreen">Tăng (33,4%)</span>
-                            </div>
-                            <div class="p-3 bg-gray-900/90 rounded-xl border border-gray-800 flex justify-between items-center">
-                                <span><i class="fa-solid fa-concierge-bell text-neonYellow mr-1.5"></i> Dịch vụ:</span>
-                                <span class="font-bold text-neonGreen">Tăng (40,2%)</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Theo thành phần -->
-                    <div>
-                        <h3 class="text-xs font-bold uppercase tracking-wider text-neonBlue mb-2.5">Theo Thành Phần Kinh Tế:</h3>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                            <div class="p-3 bg-gray-900/90 rounded-xl border border-gray-800">
-                                <span class="text-gray-400">Ngoài Nhà nước:</span>
-                                <p class="text-sm font-bold text-white mt-0.5">Chiếm nhiều nhất <span class="text-neonYellow">(81,9%)</span></p>
-                            </div>
-                            <div class="p-3 bg-gray-900/90 rounded-xl border border-gray-800">
-                                <span class="text-gray-400">Khu vực FDI:</span>
-                                <p class="text-sm font-bold text-white mt-0.5">Tăng nhanh <span class="text-neonGreen">(10,4%)</span></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 3. Việc làm & Thu nhập & 4. Giải pháp -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <section class="glass-card rounded-2xl p-5 border border-neonYellow/30">
-                    <h2 class="text-lg font-bold font-heading text-white flex items-center gap-2.5 mb-3 border-b border-gray-800 pb-2">
-                        <span class="w-8 h-8 rounded-xl bg-neonYellow/20 border border-neonYellow/40 text-neonYellow flex items-center justify-center font-bold text-sm">3</span>
-                        <span>Việc Làm & Thu Nhập</span>
-                    </h2>
-                    <div class="space-y-3 text-xs sm:text-sm text-gray-300">
-                        <div class="p-3 rounded-xl bg-neonRed/10 border border-neonRed/20 text-neonRed font-semibold flex items-center gap-2">
-                            <i class="fa-solid fa-triangle-exclamation"></i>
-                            <span>Thất nghiệp thanh niên còn cao (gấp 3,5 lần mức chung).</span>
-                        </div>
-                        <ul class="space-y-1.5 pt-1">
-                            <li>• <strong class="text-white">Thu nhập cao nhất:</strong> Đông Nam Bộ.</li>
-                            <li>• <strong class="text-white">Thu nhập thấp nhất:</strong> Trung du miền núi phía Bắc.</li>
-                        </ul>
-                    </div>
-                </section>
-
-                <section class="glass-card rounded-2xl p-5 border border-neonGreen/30">
-                    <h2 class="text-lg font-bold font-heading text-white flex items-center gap-2.5 mb-3 border-b border-gray-800 pb-2">
-                        <span class="w-8 h-8 rounded-xl bg-neonGreen/20 border border-neonGreen/40 text-neonGreen flex items-center justify-center font-bold text-sm">4</span>
-                        <span>Giải Pháp Trọng Tâm</span>
-                    </h2>
-                    <ul class="space-y-2 text-xs sm:text-sm text-gray-300">
-                        <li class="flex items-center gap-2">
-                            <i class="fa-solid fa-check text-neonGreen"></i>
-                            <span>Đào tạo nghề chất lượng cao.</span>
-                        </li>
-                        <li class="flex items-center gap-2">
-                            <i class="fa-solid fa-check text-neonGreen"></i>
-                            <span>Phát triển các ngành kinh tế tạo việc làm.</span>
-                        </li>
-                        <li class="flex items-center gap-2">
-                            <i class="fa-solid fa-check text-neonGreen"></i>
-                            <span>Hoàn thiện thị trường và chính sách lao động.</span>
-                        </li>
-                    </ul>
-                </section>
-            </div>
-        </div>
-
-    </main>
-
-    <div class="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-darkBg/95 border-t border-gray-800 px-6 py-2.5 flex items-center justify-around backdrop-blur-lg">
-        <button @click="currentSubject = 'history'" 
-                :class="currentSubject === 'history' ? 'text-neonRed font-bold' : 'text-gray-400'"
-                class="flex flex-col items-center gap-1 text-[11px] transition-colors">
-            <i class="fa-solid fa-bomb text-base"></i>
-            <span>Lịch Sử</span>
-        </button>
-        <button @click="currentSubject = 'geography'" 
-                :class="currentSubject === 'geography' ? 'text-neonGreen font-bold' : 'text-gray-400'"
-                class="flex flex-col items-center gap-1 text-[11px] transition-colors">
-            <i class="fa-solid fa-earth-asia text-base"></i>
-            <span>Địa Lý</span>
-        </button>
-        <button @click="openQuiz()" class="flex flex-col items-center gap-1 text-[11px] text-neonBlue">
-            <i class="fa-solid fa-gamepad text-base"></i>
-            <span>Quiz</span>
-        </button>
-        <button @click="copyActiveContent()" class="flex flex-col items-center gap-1 text-[11px] text-gray-400">
-            <i class="fa-regular fa-copy text-base"></i>
-            <span>Copy</span>
-        </button>
-    </div>
-
-    <footer class="border-t border-gray-800/80 bg-darkBg py-4 text-center text-xs text-gray-500">
-        <div class="max-w-5xl mx-auto px-4 space-y-1">
-            <p>Bài làm của nhóm 2</p>
-        </div>
-    </footer>
-
-    <div x-show="quizModalOpen" 
-         x-transition:enter="transition ease-out duration-300"
-         x-transition:enter-start="opacity-0 scale-95"
-         x-transition:enter-end="opacity-100 scale-100"
-         x-transition:leave="transition ease-in duration-200"
-         x-transition:leave-start="opacity-100 scale-100"
-         x-transition:leave-end="opacity-0 scale-95"
-         class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md"
-         style="display: none;">
-        
-        <div class="bg-darkCard border border-gray-700 rounded-3xl max-w-lg w-full p-6 space-y-5 shadow-2xl relative">
-            <button @click="quizModalOpen = false" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg">
-                <i class="fa-solid fa-xmark"></i>
+        <!-- Tab Buttons Desktop -->
+        <div class="hidden md:flex p-1 bg-slate-900 border border-slate-800 rounded-xl">
+            <button
+                    @click="activeTab = 'history'"
+                    :class="activeTab === 'history' ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/25' : 'text-slate-400 hover:text-white'"
+                    class="px-5 py-2 rounded-lg font-bold text-sm transition-all flex items-center gap-2">
+                <i class="fa-solid fa-bomb"></i>
+                Phần Lịch Sử
             </button>
+            <button
+                    @click="activeTab = 'geography'"
+                    :class="activeTab === 'geography' ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-lg shadow-emerald-500/25' : 'text-slate-400 hover:text-white'"
+                    class="px-5 py-2 rounded-lg font-bold text-sm transition-all flex items-center gap-2">
+                <i class="fa-solid fa-users-gear"></i>
+                Phần Địa Lý
+            </button>
+        </div>
 
-            <div class="flex items-center gap-2 text-neonBlue font-bold text-sm">
-                <i class="fa-solid fa-circle-question text-base"></i>
-                <span>Ôn Tập Nhanh (<span x-text="quizIndex + 1"></span>/4)</span>
+        <!-- Quick Navigation Jump -->
+        <div class="flex items-center gap-2">
+            <a href="#toc-section" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold flex items-center gap-1 border border-slate-700">
+                <i class="fa-solid fa-list-ul text-cyan-400"></i> Mục lục
+            </a>
+        </div>
+    </div>
+
+    <!-- Mobile Bottom/Top Switcher Bar -->
+    <div class="md:hidden flex border-t border-slate-800/80 bg-slate-950 p-1.5 gap-1">
+        <button
+                @click="activeTab = 'history'"
+                :class="activeTab === 'history' ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/50' : 'text-slate-400 border-transparent'"
+                class="flex-1 py-2 rounded-lg font-bold text-xs text-center border transition-all flex items-center justify-center gap-1.5">
+            <i class="fa-solid fa-bomb"></i> Lịch Sử WW2
+        </button>
+        <button
+                @click="activeTab = 'geography'"
+                :class="activeTab === 'geography' ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/50' : 'text-slate-400 border-transparent'"
+                class="flex-1 py-2 rounded-lg font-bold text-xs text-center border transition-all flex items-center justify-center gap-1.5">
+            <i class="fa-solid fa-users-gear"></i> Địa Lý Lao Động
+        </button>
+    </div>
+</header>
+
+<main class="max-w-5xl mx-auto px-4 py-6 md:py-10 space-y-8">
+
+    <!-- Banner Chào Hỏi -->
+    <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 p-6 md:p-8 border border-slate-800 shadow-2xl">
+        <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-cyan-500/10 rounded-full blur-3xl"></div>
+        <div class="relative z-10 space-y-2">
+                <span class="px-3 py-1 text-xs font-extrabold uppercase tracking-wider rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+                    LỊCH SỬ ĐỊA LÝ NỘI DUNG SỐ
+                </span>
+            <h2 class="text-2xl md:text-4xl font-black text-white tracking-tight">
+                Chào mừng bạn đến với trang nội dung số của nhóm 2
+            </h2>
+            <p class="text-slate-400 text-sm md:text-base max-w-2xl">
+                Hệ thống hóa kiến thức trọng tâm bài Lịch Sử Thế Chiến II và bài Địa Lý Lao Động & Việc Làm Việt Nam.
+            </p>
+        </div>
+    </div>
+
+    <!-- ==================== TAB 1: LỊCH SỬ WORLD WAR II ==================== -->
+    <div x-show="activeTab === 'history'" x-transition:enter="transition ease-out duration-300 transform opacity-0 translate-y-4" class="space-y-8">
+
+        <!-- Quick TOC Section -->
+        <div id="toc-section" class="bg-slate-900/90 rounded-2xl p-4 md:p-6 border border-slate-800">
+            <h3 class="text-sm font-bold uppercase tracking-wider text-cyan-400 mb-3 flex items-center gap-2">
+                <i class="fa-solid fa-bars-staggered"></i> Mục Lục Bài Lịch Sử
+            </h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs md:text-sm font-semibold">
+                <a href="#hist-stalin" class="p-2.5 rounded-xl bg-slate-800/60 hover:bg-cyan-950 hover:text-cyan-300 border border-slate-700/50 transition flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-cyan-400"></span> Stalin
+                </a>
+                <a href="#hist-cause" class="p-2.5 rounded-xl bg-slate-800/60 hover:bg-cyan-950 hover:text-cyan-300 border border-slate-700/50 transition flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-cyan-400"></span> 1. Nguyên nhân
+                </a>
+                <a href="#hist-timeline" class="p-2.5 rounded-xl bg-slate-800/60 hover:bg-cyan-950 hover:text-cyan-300 border border-slate-700/50 transition flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-cyan-400"></span> 2. Diễn biến
+                </a>
+                <a href="#hist-impact" class="p-2.5 rounded-xl bg-slate-800/60 hover:bg-cyan-950 hover:text-cyan-300 border border-slate-700/50 transition flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-cyan-400"></span> 3. Hậu quả & Ý nghĩa
+                </a>
             </div>
+        </div>
 
-            <div x-show="!quizCompleted" class="space-y-4">
-                <h3 class="font-bold text-white text-sm sm:text-base" x-text="activeQuizList[quizIndex].q"></h3>
-
-                <div class="space-y-2">
-                    <template x-for="(opt, idx) in activeQuizList[quizIndex].options" :key="idx">
-                        <button @click="checkAnswer(idx)" 
-                                class="w-full text-left p-3 rounded-xl border border-gray-800 hover:border-neonBlue hover:bg-gray-800/80 text-xs sm:text-sm text-gray-200 transition-all flex items-center justify-between">
-                            <span x-text="opt"></span>
-                            <i class="fa-solid fa-chevron-right text-xs text-gray-500"></i>
-                        </button>
-                    </template>
+        <!-- Profile Card: Joseph Vissarionovich Stalin -->
+        <div id="hist-stalin" class="glow-box-purple rounded-2xl bg-gradient-to-br from-slate-900 via-purple-950/30 to-slate-900 p-5 md:p-7 border border-purple-500/30 card-hover">
+            <div class="flex flex-col md:flex-row gap-5 items-start">
+                <div class="w-full md:w-48 h-48 rounded-xl bg-slate-800 border border-purple-500/30 flex flex-col items-center justify-center p-4 text-center shrink-0">
+                    <i class="fa-solid fa-user-shield text-5xl text-purple-400 mb-2"></i>
+                    <h4 class="font-extrabold text-white text-base">Joseph Vissarionovich Stalin</h4>
+                    <span class="text-[11px] text-purple-300 bg-purple-950/80 px-2 py-0.5 rounded border border-purple-800/50 mt-1">
+                            Lãnh đạo Soviet Union
+                        </span>
+                </div>
+                <div class="space-y-3 flex-1">
+                    <div class="border-b border-purple-800/40 pb-2">
+                        <span class="text-xs font-extrabold text-purple-400 uppercase tracking-widest">Nhân Vật Lịch Sử Then Chốt</span>
+                        <h3 class="text-xl md:text-2xl font-black text-white">JOSEPH VISSARIONOVICH STALIN</h3>
+                        <p class="text-xs text-slate-400 italic">Ngày sinh: Chưa xác định *cho đến hiện tại* | Lãnh đạo tối cao của Soviet Union trong Thế chiến II</p>
+                    </div>
+                    <h5 class="text-xs font-bold text-slate-300 uppercase">Sự đóng góp trong lịch sử:</h5>
+                    <ul class="space-y-2 text-xs md:text-sm text-slate-300">
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-check text-purple-400 mt-1 shrink-0"></i>
+                            <span><strong>Lãnh đạo kháng chiến:</strong> Tổng chỉ huy Red Army đánh bại Nazi Germany ở Mặt trận phía Đông.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-check text-purple-400 mt-1 shrink-0"></i>
+                            <span><strong>Trận chiến lịch sử:</strong> Chỉ đạo thành công các chiến dịch quy mô lớn làm thay đổi cục diện chiến tranh như Trận Stalingrad, Trận Kursk, và Chiến dịch Bagration.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-check text-purple-400 mt-1 shrink-0"></i>
+                            <span><strong>Định hình thế giới:</strong> Cùng với US và UK tham dự các hội nghị thượng đỉnh Tehran (1943) và Yalta (1945) để thống nhất chiến lược tiêu diệt Khối Trục và thiết lập trật tự thế giới sau chiến tranh.</span>
+                        </li>
+                    </ul>
                 </div>
             </div>
+        </div>
 
-            <div x-show="quizCompleted" class="text-center py-6 space-y-4">
-                <div class="text-4xl">🎉</div>
-                <h3 class="font-bold text-xl text-white">Hoàn Thành!</h3>
-                <p class="text-sm text-gray-300">Điểm số: <span class="font-bold text-neonBlue text-base" x-text="quizScore"></span> / 4</p>
-                <button @click="resetQuiz()" class="px-5 py-2.5 rounded-xl bg-neonBlue text-darkBg font-bold text-xs uppercase tracking-wider shadow-lg shadow-neonBlue/30 hover:opacity-90">
-                    Làm Lại Quiz
-                </button>
+        <!-- 1. Nguyên Nhân -->
+        <div id="hist-cause" class="glow-box-blue rounded-2xl bg-slate-900/90 p-5 md:p-7 border border-cyan-500/30 card-hover">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 font-bold text-lg">
+                    1
+                </div>
+                <h3 class="text-lg md:text-xl font-bold text-white">NGUYÊN NHÂN</h3>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs md:text-sm">
+                <div class="p-4 rounded-xl bg-slate-950/60 border border-slate-800 space-y-1">
+                    <span class="text-xs font-extrabold text-cyan-400 uppercase">Sâu xa</span>
+                    <p class="text-slate-300">Mâu thuẫn giữa các nước đế quốc về thị trường, thuộc địa. Khối Trục (Germany, Italy, Japan) muốn chia lại thế giới.</p>
+                </div>
+                <div class="p-4 rounded-xl bg-slate-950/60 border border-slate-800 space-y-1">
+                    <span class="text-xs font-extrabold text-pink-400 uppercase">Trực tiếp</span>
+                    <p class="text-slate-300"><strong class="text-white">1/9/1939:</strong> Germany xâm lược Poland ➔ Chiến tranh chính thức bùng nổ.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Diễn Biến Chính -->
+        <div id="hist-timeline" class="glow-box-blue rounded-2xl bg-slate-900/90 p-5 md:p-7 border border-cyan-500/30 card-hover space-y-6">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 font-bold text-lg">
+                    2
+                </div>
+                <h3 class="text-lg md:text-xl font-bold text-white">DIỄN BIẾN CHÍNH</h3>
+            </div>
+
+            <div class="relative border-l-2 border-cyan-500/30 ml-4 pl-6 space-y-6">
+                <div class="relative">
+                    <span class="absolute -left-[31px] top-1.5 w-4 h-4 rounded-full bg-cyan-500 ring-4 ring-slate-900"></span>
+                    <span class="px-2.5 py-0.5 rounded text-xs font-extrabold bg-cyan-950 text-cyan-300 border border-cyan-800">
+                            1939 – 1941
+                        </span>
+                    <p class="text-xs md:text-sm text-slate-300 mt-2">
+                        Germany chiếm hầu hết Europe; Japan tấn công Pearl Harbor ➔ US chính thức tham chiến.
+                    </p>
+                </div>
+
+                <div class="relative">
+                    <span class="absolute -left-[31px] top-1.5 w-4 h-4 rounded-full bg-indigo-500 ring-4 ring-slate-900"></span>
+                    <span class="px-2.5 py-0.5 rounded text-xs font-extrabold bg-indigo-950 text-indigo-300 border border-indigo-800">
+                            1942 – 1943 (Bước Ngoặt)
+                        </span>
+                    <p class="text-xs md:text-sm text-slate-300 mt-2">
+                        Soviet Union thắng trận Stalingrad ➔ Bước ngoặt xoay chuyển cục diện, phe Allies phản công toàn diện.
+                    </p>
+                </div>
+
+                <div class="relative">
+                    <span class="absolute -left-[31px] top-1.5 w-4 h-4 rounded-full bg-pink-500 ring-4 ring-slate-900"></span>
+                    <span class="px-2.5 py-0.5 rounded text-xs font-extrabold bg-pink-950 text-pink-300 border border-pink-800">
+                            1945 (Kết Thúc)
+                        </span>
+                    <div class="space-y-2 mt-2 text-xs md:text-sm text-slate-300">
+                        <p><strong class="text-white">Tháng 5:</strong> Soviet Union chiếm Berlin ➔ Germany đầu hàng.</p>
+                        <p><strong class="text-white">Tháng 8:</strong> US thả 2 quả bom nguyên tử xuống Japan ➔ Japan đầu hàng, chiến tranh kết thúc.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Hậu Quả & Ý Nghĩa -->
+        <div id="hist-impact" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="rounded-2xl bg-slate-900/90 p-5 md:p-6 border border-pink-500/30 card-hover space-y-3">
+                <h4 class="text-base font-bold text-pink-400 flex items-center gap-2">
+                    <i class="fa-solid fa-skull-crossbones"></i> 3. HẬU QUẢ
+                </h4>
+                <ul class="space-y-2 text-xs md:text-sm text-slate-300">
+                    <li class="flex items-start gap-2">
+                        <span class="text-pink-500 font-bold">•</span>
+                        <span>Thảm họa lớn nhất lịch sử: ~60 triệu người chết, 90 triệu người bị thương.</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="text-pink-500 font-bold">•</span>
+                        <span>Kinh tế Europe, Asia bị tàn phá nặng nề.</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="rounded-2xl bg-slate-900/90 p-5 md:p-6 border border-emerald-500/30 card-hover space-y-3">
+                <h4 class="text-base font-bold text-emerald-400 flex items-center gap-2">
+                    <i class="fa-solid fa-trophy"></i> 4. Ý NGHĨA & VAI TRÒ
+                </h4>
+                <div class="space-y-2 text-xs md:text-sm text-slate-300">
+                    <p><strong>Ý nghĩa:</strong> Cứu nhân loại khỏi chủ nghĩa phát xít; tạo điều kiện cho phong trào giải phóng dân tộc phát triển mạnh mẽ.</p>
+                    <p><strong>Soviet Union:</strong> Lực lượng đi đầu, gánh team chính tiêu diệt phát xít Germany ở Europe và đánh tan quân Japan ở Asia.</p>
+                    <p><strong>Allies (US, UK):</strong> Phối hợp chiến trường, cung cấp vũ khí/hậu cần và mở mặt trận thứ hai ép phát xít sụp đổ.</p>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- TOAST NOTIFICATION -->
-    <div x-show="toast.show" 
-         x-transition:enter="toast-enter"
-         class="fixed bottom-16 sm:bottom-5 right-5 z-50 bg-neonBlue text-darkBg px-4 py-2.5 rounded-xl font-bold text-xs shadow-xl flex items-center gap-2"
-         style="display: none;">
-        <i class="fa-solid fa-circle-check"></i>
-        <span x-text="toast.message"></span>
+    <!-- ==================== TAB 2: ĐỊA LÝ LAO ĐỘNG & VIỆC LÀM ==================== -->
+    <div x-show="activeTab === 'geography'" x-transition:enter="transition ease-out duration-300 transform opacity-0 translate-y-4" class="space-y-8">
+
+        <!-- Quick TOC Section Địa Lý -->
+        <div class="bg-slate-900/90 rounded-2xl p-4 md:p-6 border border-slate-800">
+            <h3 class="text-sm font-bold uppercase tracking-wider text-emerald-400 mb-3 flex items-center gap-2">
+                <i class="fa-solid fa-bars-staggered"></i> Mục Lục Bài Địa Lý
+            </h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs md:text-sm font-semibold">
+                <a href="#geo-dacdiem" class="p-2.5 rounded-xl bg-slate-800/60 hover:bg-emerald-950 hover:text-emerald-300 border border-slate-700/50 transition flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Đặc điểm
+                </a>
+                <a href="#geo-stat" class="p-2.5 rounded-xl bg-slate-800/60 hover:bg-emerald-950 hover:text-emerald-300 border border-slate-700/50 transition flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Số liệu việc làm
+                </a>
+                <a href="#geo-thachthuc" class="p-2.5 rounded-xl bg-slate-800/60 hover:bg-emerald-950 hover:text-emerald-300 border border-slate-700/50 transition flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Thách thức & Thu nhập
+                </a>
+                <a href="#geo-giaiphap" class="p-2.5 rounded-xl bg-slate-800/60 hover:bg-emerald-950 hover:text-emerald-300 border border-slate-700/50 transition flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Giải pháp
+                </a>
+            </div>
+        </div>
+
+        <!-- Header Title -->
+        <div class="text-center space-y-2">
+                <span class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+                    ĐỊA LÝ VIỆT NAM
+                </span>
+            <h2 class="text-2xl md:text-3xl font-black text-white">LAO ĐỘNG VÀ VIỆC LÀM Ở VIỆT NAM</h2>
+        </div>
+
+        <!-- Grid Stat Cards -->
+        <div id="geo-dacdiem" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="p-5 rounded-2xl bg-slate-900/90 border border-emerald-500/30 space-y-2 card-hover">
+                <span class="text-xs font-bold text-emerald-400 uppercase">Số Lượng & Cơ Cấu</span>
+                <h4 class="text-2xl font-black text-white">52,9 Triệu <span class="text-xs font-normal text-slate-400">(52,2% Dân số 2024)</span></h4>
+                <p class="text-xs text-slate-300">Cơ cấu tuổi đang già hóa: Nhóm trẻ (15–24 tuổi) giảm nhanh, nhóm trên 50 tuổi tăng lên.</p>
+            </div>
+
+            <div class="p-5 rounded-2xl bg-slate-900/90 border border-emerald-500/30 space-y-2 card-hover">
+                <span class="text-xs font-bold text-emerald-400 uppercase">Chất Lượng Lao Động</span>
+                <h4 class="text-2xl font-black text-cyan-400">28,4% <span class="text-xs font-normal text-slate-400">Qua đào tạo</span></h4>
+                <p class="text-xs text-slate-300">Chăm chỉ, sáng tạo, giàu kinh nghiệm. Tỷ lệ qua đào tạo cao nhất ở Đồng bằng sông Hồng.</p>
+            </div>
+
+            <div class="p-5 rounded-2xl bg-slate-900/90 border border-pink-500/30 space-y-2 card-hover">
+                <span class="text-xs font-bold text-pink-400 uppercase">Hạn Chế Thách Thức</span>
+                <h4 class="text-lg font-bold text-white">Thể lực & Kỹ năng</h4>
+                <p class="text-xs text-slate-300">Lao động còn yếu về thể lực, thiếu kỹ năng chuyên sâu và tác phong công nghiệp làm ảnh hưởng đến năng suất.</p>
+            </div>
+        </div>
+
+        <!-- Bảng Thống Kê Số Liệu Việc Làm -->
+        <div id="geo-stat" class="rounded-2xl bg-slate-900/90 p-5 md:p-7 border border-emerald-500/30 space-y-4">
+            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-table text-emerald-400"></i> BẢNG SỐ LIỆU VẤN ĐỀ VIỆC LÀM (2010 - 2024)
+            </h3>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs md:text-sm">
+                    <thead class="bg-slate-800 text-slate-300 uppercase text-[11px]">
+                    <tr>
+                        <th class="p-3 rounded-l-xl">Hạng mục / Tiêu chí</th>
+                        <th class="p-3 text-center">Năm 2010</th>
+                        <th class="p-3 text-center rounded-r-xl">Năm 2024</th>
+                    </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-800 text-slate-200">
+                    <tr class="hover:bg-slate-800/40 transition">
+                        <td class="p-3 font-semibold">Tỷ lệ thất nghiệp chung</td>
+                        <td class="p-3 text-center font-bold text-slate-400">2.88%</td>
+                        <td class="p-3 text-center font-bold text-emerald-400">2.24% 📉</td>
+                    </tr>
+                    <tr class="hover:bg-slate-800/40 transition">
+                        <td class="p-3 font-semibold">Tỷ lệ thiếu việc làm</td>
+                        <td class="p-3 text-center font-bold text-slate-400">3.57%</td>
+                        <td class="p-3 text-center font-bold text-emerald-400">1.85% 📉</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Thách thức & Phân hóa Thu nhập -->
+        <div id="geo-thachthuc" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="p-5 md:p-6 rounded-2xl bg-slate-900/90 border border-amber-500/30 space-y-3">
+                <h4 class="text-base font-bold text-amber-400 flex items-center gap-2">
+                    <i class="fa-solid fa-triangle-exclamation"></i> Thách Thức Việc Làm
+                </h4>
+                <ul class="space-y-2 text-xs md:text-sm text-slate-300">
+                    <li>• <strong>Thất nghiệp thanh niên:</strong> Còn rất cao (gấp <strong class="text-amber-400">3,5 lần</strong> mức trung bình cả nước năm 2024).</li>
+                    <li>• <strong>Trình độ kỹ thuật:</strong> Chưa đáp ứng tốt các ngành công nghệ cao mới như AI, logistics, khoa học dữ liệu.</li>
+                </ul>
+            </div>
+
+            <div class="p-5 md:p-6 rounded-2xl bg-slate-900/90 border border-cyan-500/30 space-y-3">
+                <h4 class="text-base font-bold text-cyan-400 flex items-center gap-2">
+                    <i class="fa-solid fa-chart-line"></i> Xu Hướng Thu Nhập Bình Quân
+                </h4>
+                <p class="text-xs md:text-sm text-slate-300">
+                    <strong>Xu hướng chung:</strong> Thu nhập bình quân đầu người tăng mạnh ở tất cả các vùng giai đoạn 2010–2024.
+                </p>
+                <p class="text-xs md:text-sm text-slate-300">
+                    <strong>Sự phân hóa:</strong> Chênh lệch lớn giữa các vùng phát triển công nghiệp / dịch vụ (<strong class="text-cyan-300">Đông Nam Bộ, ĐB sông Hồng</strong>) với các vùng miền núi (<strong class="text-slate-400">Trung du & miền núi phía Bắc</strong>).
+                </p>
+            </div>
+        </div>
+
+        <!-- Phương Hướng Giải Quyết -->
+        <div id="geo-giaiphap" class="p-5 md:p-7 rounded-2xl bg-gradient-to-br from-slate-900 via-emerald-950/20 to-slate-900 border border-emerald-500/40 space-y-4">
+            <h3 class="text-lg font-bold text-emerald-400 flex items-center gap-2">
+                <i class="fa-solid fa-lightbulb"></i> PHƯƠNG HƯỚNG GIẢI QUYẾT VIỆC LÀM
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs md:text-sm">
+                <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 flex items-start gap-3">
+                    <i class="fa-solid fa-briefcase text-emerald-400 mt-1"></i>
+                    <span>Thúc đẩy phát triển các ngành kinh tế để tạo việc làm mới.</span>
+                </div>
+                <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 flex items-start gap-3">
+                    <i class="fa-solid fa-scale-balanced text-emerald-400 mt-1"></i>
+                    <span>Hoàn thiện chính sách, pháp luật về lao động.</span>
+                </div>
+                <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 flex items-start gap-3">
+                    <i class="fa-solid fa-graduation-cap text-emerald-400 mt-1"></i>
+                    <span>Đẩy mạnh đào tạo, dạy nghề nâng cao chất lượng lao động.</span>
+                </div>
+                <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 flex items-start gap-3">
+                    <i class="fa-solid fa-globe text-emerald-400 mt-1"></i>
+                    <span>Phát triển hệ thống thông tin thị trường lao động và mở rộng hợp tác quốc tế.</span>
+                </div>
+            </div>
+        </div>
+
     </div>
 
-    <script>
-        function appData() {
-            return {
-                currentSubject: 'history', // 'history' or 'geography'
-                quizModalOpen: false,
+</main>
 
-                // Quiz State
-                quizIndex: 0,
-                quizScore: 0,
-                quizCompleted: false,
+<!-- Footer Cập Nhật Theo Yêu Cầu -->
+<footer class="border-t border-slate-800 py-6 text-center text-xs text-slate-400 space-y-2">
+    <p class="font-semibold">Được làm bởi Nhóm 2</p>
+    <p class="text-slate-600">LỊCH SỬ ĐỊA LÝ NỘI DUNG SỐ</p>
+</footer>
 
-                historyQuiz: [
-                    { q: "Sự kiện 1/9/1939 bùng nổ chiến tranh khi Germany xâm lược nước nào?", options: ["A. France", "B. Poland", "C. Soviet Union", "D. US"], correct: 1 },
-                    { q: "Trận đánh được coi là bước ngoặt chiến tranh xoay chuyển cục diện?", options: ["A. Pearl Harbor", "B. Stalingrad", "C. Berlin", "D. Midway"], correct: 1 },
-                    { q: "Mỹ thả 2 quả bom nguyên tử xuống Japan vào thời gian nào?", options: ["A. Tháng 5/1945", "B. Tháng 8/1945", "C. Tháng 12/1941", "D. Tháng 9/1939"], correct: 1 },
-                    { q: "Quốc gia nào đi đầu gánh team chính tiêu diệt phát xít Đức ở Europe?", options: ["A. Soviet Union", "B. US", "C. UK", "D. Poland"], correct: 0 }
-                ],
-
-                geoQuiz: [
-                    { q: "Tỷ lệ lao động dồi dào chiếm bao nhiêu % dân số?", options: ["A. 28,4%", "B. 52,2%", "C. 33,4%", "D. 81,9%"], correct: 1 },
-                    { q: "Ngành kinh tế nào có tỷ lệ lao động giảm?", options: ["A. Công nghiệp", "B. Dịch vụ", "C. Nông nghiệp", "D. Khu vực FDI"], correct: 2 },
-                    { q: "Thành phần kinh tế nào sử dụng lao động chiếm nhiều nhất (81,9%)?", options: ["A. Nhà nước", "B. Khu vực FDI", "C. Ngoài Nhà nước", "D. Nông nghiệp"], correct: 2 },
-                    { q: "Vùng nào có mức thu nhập của lao động cao nhất nước?", options: ["A. Trung du miền núi phía Bắc", "B. Đồng bằng sông Hồng", "C. Đông Nam Bộ", "D. Tây Nguyên"], correct: 2 }
-                ],
-
-                get activeQuizList() {
-                    return this.currentSubject === 'history' ? this.historyQuiz : this.geoQuiz;
-                },
-
-                toast: { show: false, message: '' },
-
-                openQuiz() {
-                    this.resetQuiz();
-                    this.quizModalOpen = true;
-                },
-
-                checkAnswer(idx) {
-                    if (idx === this.activeQuizList[this.quizIndex].correct) {
-                        this.quizScore++;
-                    }
-                    if (this.quizIndex + 1 < this.activeQuizList.length) {
-                        this.quizIndex++;
-                    } else {
-                        this.quizCompleted = true;
-                    }
-                },
-
-                resetQuiz() {
-                    this.quizIndex = 0;
-                    this.quizScore = 0;
-                    this.quizCompleted = false;
-                },
-
-                showToast(msg) {
-                    this.toast.message = msg;
-                    this.toast.show = true;
-                    setTimeout(() => { this.toast.show = false; }, 2500);
-                },
-
-                copyActiveContent() {
-                    let text = "";
-                    if (this.currentSubject === 'history') {
-                        text = `💣 LỊCH SỬ BÀI 4: WORLD WAR II (SIÊU NGẮN GỌN)
-1. Nguyên nhân:
-- Sâu xa: Mâu thuẫn giữa các nước đế quốc về thị trường, thuộc địa. Khối Trục (Germany, Italy, Japan) muốn chia lại thế giới.
-- Trực tiếp: 1/9/1939, Germany xâm lược Poland ➔ Chiến tranh bùng nổ.
-2. Diễn biến chính:
-- 1939 – 1941: Germany chiếm hầu hết Europe; Japan tấn công Pearl Harbor ➔ US chính thức tham chiến.
-- 1942 – 1943: Soviet Union thắng trận Stalingrad ➔ Bước ngoặt xoay chuyển cục diện, phe Allies phản công.
-- 1945:
-  + Tháng 5: Soviet Union chiếm Berlin ➔ Germany đầu hàng.
-  + Tháng 8: US thả 2 quả bom nguyên tử xuống Japan ➔ Japan đầu hàng, chiến tranh kết thúc.
-3. Hậu quả:
-- Thảm họa lớn nhất lịch sử: ~60 triệu người chết, 90 triệu người bị thương.
-- Kinh tế Europe, Asia bị tàn phá nặng nề.
-4. Ý nghĩa lịch sử & Vai trò:
-- Ý nghĩa: Cứu nhân loại khỏi chủ nghĩa phát xít; tạo điều kiện cho phong trào giải phóng dân tộc phát triển mạnh mẽ.
-- Vai trò: Soviet Union đi đầu gánh team chính ở Europe & Asia. Allies (US, UK) phối hợp chiến trường & hậu cần.`;
-                    } else {
-                        text = `🌏 ĐỊA LÝ: NGUỒN LAO ĐỘNG & SỬ DỤNG LAO ĐỘNG (DỄ HIỂU)
-1. Nguồn lao động:
-- Dồi dào (52,2% dân số), chất lượng nâng cao (28,4% qua đào tạo), nhưng thiếu kỹ năng sâu.
-2. Sử dụng lao động:
-- Theo ngành: Giảm Nông nghiệp (26,4%), tăng Công nghiệp (33,4%) và Dịch vụ (40,2%).
-- Theo thành phần: Ngoài Nhà nước chiếm nhiều nhất (81,9%), khu vực FDI tăng nhanh (10,4%).
-3. Việc làm & Thu nhập:
-- Thất nghiệp thanh niên còn cao (gấp 3,5 lần mức chung).
-- Thu nhập: Cao nhất ở Đông Nam Bộ, thấp nhất ở Trung du miền núi phía Bắc.
-4. Giải pháp:
-- Đào tạo nghề, phát triển các ngành kinh tế tạo việc làm, hoàn thiện chính sách lao động.`;
-                    }
-
-                    const textArea = document.createElement("textarea");
-                    textArea.value = text;
-                    document.body.appendChild(textArea);
-                    textArea.select();
-                    try {
-                        document.execCommand('copy');
-                        this.showToast('Đã copy tóm tắt vào Clipboard!');
-                    } catch (err) {
-                        this.showToast('Lỗi khi sao chép!');
-                    }
-                    document.body.removeChild(textArea);
-                }
-            }
-        }
-    </script>
 </body>
 </html>
